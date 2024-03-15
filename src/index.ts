@@ -10,11 +10,13 @@ const DEFAULT_LANGUAGE = 'en';
 interface TripadvisorSearchRequest {
   searchQuery?: string;
   language?: string;
+  key?: string;
 }
 
 interface TripadvisorRequest {
   locationId?: string;
   language?: string;
+  key?: string;
 }
 
 dotenv.config();
@@ -22,13 +24,17 @@ dotenv.config();
 const app = express();
 
 const apiUrl = 'https://api.content.tripadvisor.com/api/v1/location';
-const apiToken = process.env.TRIPADVISOR_TOKEN;
 
 app.use(cors({ origin: '*' }));
 
 app.get('/search', async (req, res) => {
   try {
-    const { searchQuery, language } = req.query as TripadvisorSearchRequest;
+    const { searchQuery, language, key } =
+      req.query as TripadvisorSearchRequest;
+
+    if (!key) {
+      throw new Error('key is required');
+    }
 
     if (!searchQuery) {
       throw new Error('searchQuery is required');
@@ -37,7 +43,7 @@ app.get('/search', async (req, res) => {
     const response = await axios.get(`${apiUrl}/search`, {
       headers: { accept: 'application/json' },
       params: {
-        key: apiToken,
+        key,
         language:
           language && SUPPORTED_LANGUAGES.has(language)
             ? language
@@ -55,7 +61,11 @@ app.get('/search', async (req, res) => {
 
 app.get('/photos', async (req, res) => {
   try {
-    const { locationId } = req.query as TripadvisorRequest;
+    const { locationId, key } = req.query as TripadvisorRequest;
+
+    if (!key) {
+      throw new Error('key is required');
+    }
 
     if (!locationId) {
       throw new Error('locationId is required');
@@ -64,7 +74,7 @@ app.get('/photos', async (req, res) => {
     const response = await axios.get(`${apiUrl}/${locationId}/photos`, {
       headers: { accept: 'application/json' },
       params: {
-        key: apiToken,
+        key,
       },
     });
 
@@ -76,16 +86,20 @@ app.get('/photos', async (req, res) => {
 
 app.get('/details', async (req, res) => {
   try {
-    const { locationId, language } = req.query as TripadvisorRequest;
+    const { locationId, language, key } = req.query as TripadvisorRequest;
 
     if (!locationId) {
       throw new Error('locationId is required');
     }
 
+    if (!key) {
+      throw new Error('key is required');
+    }
+
     const response = await axios.get(`${apiUrl}/${locationId}/details`, {
       headers: { accept: 'application/json' },
       params: {
-        key: apiToken,
+        key,
         language:
           language && SUPPORTED_LANGUAGES.has(language)
             ? language
@@ -101,7 +115,11 @@ app.get('/details', async (req, res) => {
 
 app.get('/reviews', async (req, res) => {
   try {
-    const { locationId, language } = req.query as TripadvisorRequest;
+    const { locationId, language, key } = req.query as TripadvisorRequest;
+
+    if (!key) {
+      throw new Error('key is required');
+    }
 
     if (!locationId) {
       throw new Error('locationId is required');
@@ -110,7 +128,7 @@ app.get('/reviews', async (req, res) => {
     const response = await axios.get(`${apiUrl}/${locationId}/reviews`, {
       headers: { accept: 'application/json' },
       params: {
-        key: apiToken,
+        key,
         language:
           language && SUPPORTED_LANGUAGES.has(language)
             ? language
@@ -125,5 +143,7 @@ app.get('/reviews', async (req, res) => {
 });
 
 app.listen(process.env.PORT || 3000, () => {
-  console.log(`TripAdvisor Proxy is Online on port ${process.env.PORT}`);
+  console.log(
+    `TripAdvisor Proxy is Online on port ${process.env.PORT || 3000}`,
+  );
 });
