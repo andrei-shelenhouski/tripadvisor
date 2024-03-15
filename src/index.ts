@@ -60,7 +60,7 @@ app.get('/search', async (req, res) => {
   }
 });
 
-app.get(':locationId/photos', async (req, res) => {
+app.get('/:locationId/photos', async (req, res) => {
   try {
     const { key } = req.query as TripadvisorRequest;
     const { locationId } = req.params;
@@ -88,7 +88,7 @@ app.get(':locationId/photos', async (req, res) => {
   }
 });
 
-app.get(':locationId/details', async (req, res) => {
+app.get('/:locationId/details', async (req, res) => {
   try {
     const { language, key } = req.query as TripadvisorRequest;
     const { locationId } = req.params;
@@ -120,7 +120,7 @@ app.get(':locationId/details', async (req, res) => {
   }
 });
 
-app.get(':locationId/reviews', async (req, res) => {
+app.get('/:locationId/reviews', async (req, res) => {
   try {
     const { language, key } = req.query as TripadvisorRequest;
     const { locationId } = req.params;
