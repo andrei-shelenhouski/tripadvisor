@@ -14,7 +14,6 @@ interface TripadvisorSearchRequest {
 }
 
 interface TripadvisorRequest {
-  locationId?: string;
   language?: string;
   key?: string;
 }
@@ -61,9 +60,10 @@ app.get('/search', async (req, res) => {
   }
 });
 
-app.get('/photos', async (req, res) => {
+app.get(':locationId/photos', async (req, res) => {
   try {
-    const { locationId, key } = req.query as TripadvisorRequest;
+    const { key } = req.query as TripadvisorRequest;
+    const { locationId } = req.params;
 
     if (!key) {
       res.status(400).send('key is required');
@@ -88,9 +88,10 @@ app.get('/photos', async (req, res) => {
   }
 });
 
-app.get('/details', async (req, res) => {
+app.get(':locationId/details', async (req, res) => {
   try {
-    const { locationId, language, key } = req.query as TripadvisorRequest;
+    const { language, key } = req.query as TripadvisorRequest;
+    const { locationId } = req.params;
 
     if (!key) {
       res.status(400).send('key is required');
@@ -119,9 +120,10 @@ app.get('/details', async (req, res) => {
   }
 });
 
-app.get('/reviews', async (req, res) => {
+app.get(':locationId/reviews', async (req, res) => {
   try {
-    const { locationId, language, key } = req.query as TripadvisorRequest;
+    const { language, key } = req.query as TripadvisorRequest;
+    const { locationId } = req.params;
 
     if (!key) {
       res.status(400).send('key is required');
