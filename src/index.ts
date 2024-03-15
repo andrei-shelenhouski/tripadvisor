@@ -33,11 +33,13 @@ app.get('/search', async (req, res) => {
       req.query as TripadvisorSearchRequest;
 
     if (!key) {
-      throw new Error('key is required');
+      res.status(400).send('key is required');
+      return;
     }
 
     if (!searchQuery) {
-      throw new Error('searchQuery is required');
+      res.status(400).send('searchQuery is required');
+      return;
     }
 
     const response = await axios.get(`${apiUrl}/search`, {
@@ -55,7 +57,7 @@ app.get('/search', async (req, res) => {
 
     res.send(response.data);
   } catch (error) {
-    res.send(error);
+    res.status(500).send(error);
   }
 });
 
@@ -64,11 +66,13 @@ app.get('/photos', async (req, res) => {
     const { locationId, key } = req.query as TripadvisorRequest;
 
     if (!key) {
-      throw new Error('key is required');
+      res.status(400).send('key is required');
+      return;
     }
 
     if (!locationId) {
-      throw new Error('locationId is required');
+      res.status(400).send('locationId is required');
+      return;
     }
 
     const response = await axios.get(`${apiUrl}/${locationId}/photos`, {
@@ -80,7 +84,7 @@ app.get('/photos', async (req, res) => {
 
     res.send(response.data);
   } catch (error) {
-    res.send(error);
+    res.status(500).send(error);
   }
 });
 
@@ -88,12 +92,14 @@ app.get('/details', async (req, res) => {
   try {
     const { locationId, language, key } = req.query as TripadvisorRequest;
 
-    if (!locationId) {
-      throw new Error('locationId is required');
+    if (!key) {
+      res.status(400).send('key is required');
+      return;
     }
 
-    if (!key) {
-      throw new Error('key is required');
+    if (!locationId) {
+      res.status(400).send('locationId is required');
+      return;
     }
 
     const response = await axios.get(`${apiUrl}/${locationId}/details`, {
@@ -109,7 +115,7 @@ app.get('/details', async (req, res) => {
 
     res.send(response.data);
   } catch (error) {
-    res.send(error);
+    res.status(500).send(error);
   }
 });
 
@@ -118,11 +124,13 @@ app.get('/reviews', async (req, res) => {
     const { locationId, language, key } = req.query as TripadvisorRequest;
 
     if (!key) {
-      throw new Error('key is required');
+      res.status(400).send('key is required');
+      return;
     }
 
     if (!locationId) {
-      throw new Error('locationId is required');
+      res.status(400).send('locationId is required');
+      return;
     }
 
     const response = await axios.get(`${apiUrl}/${locationId}/reviews`, {
@@ -138,7 +146,7 @@ app.get('/reviews', async (req, res) => {
 
     res.send(response.data);
   } catch (error) {
-    res.send(error);
+    res.status(500).send(error);
   }
 });
 
